@@ -1,31 +1,33 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 
+const saltRounds = 10; // Number of salt rounds for bcrypt hashing
+
 // User Registration
-const registerUser = async (req, res) => {
-  const { firstName, lastName, email, password, confirmPassword } = req.body;
+module.exports.registerUser = async (req, res) => {
+  const { firstName, lastName, username, email, password, confirmPassword } = req.body;
 
   try {
-    // Check if the user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: 'Email already exists' });
+    if (password !== confirmPassword) {
+      return res.status(400).json({ error: 'Passwords do not match' });
     }
 
-    // Create a new user instance
+    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+    if (existingUser) {
+      const field = existingUser.username === username ? 'Username' : 'Email';
+      return res.status(400).json({ error: `${field} already exists` });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
     const newUser = new User({
       firstName,
       lastName,
+      username,
       email,
-      password,
-      confirmPassword,
+      password: hashedPassword,
     });
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-    newUser.password = hashedPassword;
-
-    // Save the user to the database
     await newUser.save();
 
     res.status(201).json({ message: 'User registered successfully' });
@@ -33,32 +35,33 @@ const registerUser = async (req, res) => {
     res.status(500).json({ error: 'An error occurred' });
   }
 };
-
-// User Login
-const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-
+// Get All Users
+module.exports.getAllUsers = async (req, res) => {
   try {
-    // Check if the user exists
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    // Compare passwords
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-
-    // User authenticated
-    res.status(200).json({ message: 'User authenticated successfully' });
+    const users = await User.find({}, '-password');
+    res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: 'An error occurred' });
   }
 };
 
-module.exports = {
-  registerUser,
-  loginUser,
+// User Login
+module.exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    res.status(200).json({ message: 'User authenticated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred' });
+  }
 };

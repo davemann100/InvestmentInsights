@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 
 function App() {
   return (
+    <Router>
       <div className="App">
         <h1>App.js</h1>
         <Routes>
@@ -14,6 +15,7 @@ function App() {
           <Route path="/register" element={<Registration />} />
         </Routes>
       </div>
+    </Router>
   );
 }
 
