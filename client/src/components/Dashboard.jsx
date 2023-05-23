@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -124,3 +125,12 @@ const Dashboard = (props) => {
 };
 
 export default Dashboard;
+=======
+import React from 'react';
+
+const Dashboard = () => {
+  return <div>Welcome to the dashboard!</div>;
+};
+
+export default Dashboard;
+>>>>>>> c92074dcfe1a07e80d1e3949aa9e61ff06ae771f
