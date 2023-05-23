@@ -1,17 +1,20 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import Registration from './components/Registration';
 import Dashboard from './components/Dashboard';
+import Create from './components/Create';
+import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <h1>App.js</h1>
+
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Registration />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/create" element={<Create />} />
       </Routes>
     </div>
   );
