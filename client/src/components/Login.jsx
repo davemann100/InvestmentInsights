@@ -1,5 +1,4 @@
-// Login.js
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -9,7 +8,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!email || !password) {
@@ -17,25 +16,41 @@ const Login = () => {
       return;
     }
 
-    try {
-      const response = await axios.post('http://localhost:8000/api/login', { email, password });
-      console.log(response.data); // Handle the response as needed
-      navigate('/dashboard'); // Redirect to the dashboard or any other page
-    } catch (error) {
-      console.error(error);
-    }
+    axios
+      .post('http://localhost:8000/api/login', { email, password })
+      .then((response) => {
+        console.log(response.data); // Handle the response as needed
+        navigate('/dashboard'); // Redirect to the dashboard or any other page
+      })
+      .catch((error) => {
+        if (error.response && error.response.data && error.response.data.error) {
+          setError(error.response.data.error);
+        } else {
+          setError('An error occurred. Please try again later.');
+        }
+      });
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">Email:</label>
-        <input value={email} type="email" onChange={(e) => setEmail(e.target.value)} required />
+        <input
+          value={email}
+          type="email"
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
         <label htmlFor="password">Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
         <button type="submit">Login</button>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <Link to="/register">Don't have an account? Register here.</Link>
     </div>
   );
