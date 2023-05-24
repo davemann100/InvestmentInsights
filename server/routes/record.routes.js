@@ -4,8 +4,5 @@ const RecordController = require('../controllers/record.controller')
 module.exports = app => {
     app.get('/api/records', RecordController.findAllRecords);
 
-    // app.post('/api/records', RecordController.createNewRecord);
-    app.post('/api/records', function (req, res) {
-        RecordController.createNewRecord
-    });
+    app.post('/api/records', RecordController.createNewRecord);
 }

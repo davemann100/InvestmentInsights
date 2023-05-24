@@ -1,7 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Dashboard = (props) => {
+  //state variable holding all records
+  const [records, setRecords] = useState([]);
+
+  // set state with api request on page load
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/api/records")
+      .then((serverResponse) => {
+        console.log(serverResponse.data.Record);
+        setRecords(serverResponse.data.Record);
+      })
+      .catch((errorObj) => {
+        console.log("*ERROR", errorObj);
+      });
+  }, []);
+
   //quick search functionality
   const searchHandler = (e) => {
     e.preventDefault();
@@ -91,7 +108,24 @@ const Dashboard = (props) => {
             </tr>
           </thead>
           <tbody>
-            <tr>
+            {records.map((records) => {
+              return (
+                <tr key={records._id}>
+                  <th scope="row">{records.date}</th>
+                  <td>Buy</td>
+                  <td>NVDA</td>
+                  <td>5</td>
+                  <td>$302.25</td>
+                  <td>$1511.25</td>
+                  <td>$295</td>
+                  <td>$36.25</td>
+                  <td>-autofill-</td>
+                  <td>-autofill-</td>
+                  <td>-autofill-</td>
+                </tr>
+              );
+            })}
+            {/* <tr>
               <th scope="row">05-15-2023</th>
               <td>Buy</td>
               <td>NVDA</td>
@@ -103,23 +137,11 @@ const Dashboard = (props) => {
               <td>-autofill-</td>
               <td>-autofill-</td>
               <td>-autofill-</td>
-            </tr>
-            <tr>
-              <th scope="row">05-15-2023</th>
-              <td>Buy</td>
-              <td>NVDA</td>
-              <td>5</td>
-              <td>$302.25</td>
-              <td>$1511.25</td>
-              <td>$295</td>
-              <td>$36.25</td>
-              <td>-autofill-</td>
-              <td>-autofill-</td>
-              <td>-autofill-</td>
-            </tr>
+            </tr> */}
           </tbody>
         </table>
       </div>
+      {JSON.stringify(records)}
     </div>
   );
 };
