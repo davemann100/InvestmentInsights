@@ -14,18 +14,17 @@ function App() {
 
   return (
     <div className="App">
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Registration />} />
-        </Routes>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Registration />} />
         {shouldShowSidebar && (
-          <Sidebar>
-            <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/create" element={<Create />} />
-            </Routes>
-          </Sidebar>
+          <>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/create" element={<Create />} />
+          </>
         )}
+      </Routes>
+      {shouldShowSidebar && <Sidebar />}
     </div>
   );
 }
