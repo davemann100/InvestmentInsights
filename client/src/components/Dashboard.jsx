@@ -6,12 +6,13 @@ const Dashboard = (props) => {
   const searchHandler = (e) => {
     e.preventDefault();
     console.log("search click");
+    console.log(process.env.REACT_APP_API_KEY);
   };
 
   return (
     <div>
-      <p className="text-center text-warning">Dashboard.jsx</p>
-      <h1 className="text-center">Welcome -FirstNameHere-</h1>
+      <p className="text-warning">Dashboard.jsx</p>
+      <h1>Welcome, -FirstNameHere-</h1>
       {/* Scrolling tickers */}
       <marquee>
         <div>
@@ -22,7 +23,7 @@ const Dashboard = (props) => {
       </marquee>
 
       {/* L/R cols for chart and quick search */}
-      <div className="container d-flex justify-content-between">
+      <div className="container d-flex justify-content-around">
         <div className="left">
           <p>$.Chart Here.$</p>
           <p>-need todo research-</p>

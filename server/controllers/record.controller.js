@@ -10,3 +10,15 @@ module.exports.findAllRecords = (req, res) => {
             res.json({ message: 'Something went wrong', error: err })
         });
 }
+
+// Create One
+module.exports.createNewRecord = (req, res) => {
+    Record.create(req.body)
+        .then(newlyCreatedRecord => {
+            res.json({ record: newlyCreatedRecord })
+        })
+        .catch((errorObj) => {
+            res.json({ message: 'Something went wrong', errorObj })
+            // errorObj => response.status(400).json(errorObj)
+        });
+}
