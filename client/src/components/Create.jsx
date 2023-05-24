@@ -1,18 +1,40 @@
+import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import axios from "axios";
 
 const Create = (props) => {
   //state variables for each form input
   const [date, setDate] = useState("");
   const [b_s, setB_s] = useState("");
   const [ticker, setTicker] = useState("");
-  const [numShares, setNumShares] = useState("");
+  const [numShares, setNumShares] = useState(0);
   const [purchasePrice, setPurchasePrice] = useState(0);
   const [stopLoss, setStopLoss] = useState(0);
+
+  const navigate = useNavigate();
 
   const formHandler = (e) => {
     e.preventDefault();
     console.log("form submit");
+    //create obj from form data to mimic server model
+    const tempObjToSendServer = {
+      date: date,
+      b_s: b_s,
+      ticker: ticker,
+      numShares: numShares,
+      purchasePrice: purchasePrice,
+      stopLoss: stopLoss,
+    };
+    //post to sever
+    axios
+      .post("http://localhost:8000/api/records", tempObjToSendServer)
+      .then((serverResponse) => {
+        console.log("Server Response:", serverResponse);
+        // navigate("/dashboard");
+      })
+      .catch((errorObj) => {
+        console.log("ERROR", errorObj);
+      });
   };
 
   return (
@@ -37,7 +59,7 @@ const Create = (props) => {
                 <label htmlFor="date">Date</label>
                 <input
                   type="date"
-                  className="form-control"
+                  className="form-control form-control-sm"
                   name="date"
                   value={date}
                   onChange={(e) => {
