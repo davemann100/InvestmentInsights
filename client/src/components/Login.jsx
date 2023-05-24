@@ -32,26 +32,53 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">Email:</label>
-        <input
-          value={email}
-          type="email"
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <Link to="/register">Don't have an account? Register here.</Link>
+    <div className="container" style={{padding:"150px"}}>
+            <div className="row justify-content-center" style={{ minHeight: '75vh' }}>
+        <div className="col-lg-5" style={{padding:"50px"}}t>
+          <div className="card p-4 shadow h-100">
+            <h3 className="card-title text-center mb-4">Login</h3>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="email">Email:</label>
+                <input
+                  value={email}
+                  type="email"
+                  className="form-control"
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="password">Password:</label>
+                <input
+                  type="password"
+                  value={password}
+                  className="form-control"
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <button type="submit" className="btn btn-primary btn-block mt-4">
+                Login
+              </button>
+            </form>
+            {error && <p className="text-danger text-center mt-3">{error}</p>}
+            <p className="text-center mt-3">
+              Don't have an account? <Link to="/register">Register here.</Link>
+            </p>
+          </div>
+        </div>
+        <div className="col-lg-7 " style={{padding:"50px"}}>
+          <div className="card p-4 shadow h-100">
+            <img src="logo.png" alt="Logo" className="img-fluid mb-4" />
+            <h3 className="card-title text-center mb-4">Mission Statement</h3>
+            <p className="text-center">
+              Your mission statement goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam scelerisque velit in dolor ultricies, id eleifend mauris
+              aliquam. Sed varius sapien eu ligula cursus, vitae aliquam leo feugiat. In auctor mauris in lacus lacinia, et condimentum nisl ullamcorper.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
