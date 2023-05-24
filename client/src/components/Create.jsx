@@ -30,7 +30,7 @@ const Create = (props) => {
       .post("http://localhost:8000/api/records", tempObjToSendServer)
       .then((serverResponse) => {
         console.log("Server Response:", serverResponse);
-        // navigate("/dashboard");
+        navigate("/dashboard");
       })
       .catch((errorObj) => {
         console.log("ERROR", errorObj);
