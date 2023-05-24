@@ -3,4 +3,9 @@ const RecordController = require('../controllers/record.controller')
 //add routes after creating controllers
 module.exports = app => {
     app.get('/api/records', RecordController.findAllRecords);
+
+    // app.post('/api/records', RecordController.createNewRecord);
+    app.post('/api/records', function (req, res) {
+        RecordController.createNewRecord
+    });
 }

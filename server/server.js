@@ -16,6 +16,7 @@ require('./config/mongoose.config');
 
 // Require the routes here to run
 require('./routes/user.routes')(app);
+require('./routes/record.routes')(app);
 
 app.listen(port, () =>
   console.log(`Listening on port ${port} for requests to respond to.`)
