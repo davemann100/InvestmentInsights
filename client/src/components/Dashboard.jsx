@@ -125,19 +125,6 @@ const Dashboard = (props) => {
                 </tr>
               );
             })}
-            {/* <tr>
-              <th scope="row">05-15-2023</th>
-              <td>Buy</td>
-              <td>NVDA</td>
-              <td>5</td>
-              <td>$302.25</td>
-              <td>$1511.25</td>
-              <td>$295</td>
-              <td>$36.25</td>
-              <td>-autofill-</td>
-              <td>-autofill-</td>
-              <td>-autofill-</td>
-            </tr> */}
           </tbody>
         </table>
       </div>
