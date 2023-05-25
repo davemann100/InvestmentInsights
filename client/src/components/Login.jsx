@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate} from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -8,7 +8,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
@@ -16,25 +16,30 @@ const Login = () => {
       return;
     }
 
-    axios
-      .post('http://localhost:8000/api/login', { email, password })
-      .then((response) => {
-        console.log(response.data); // Handle the response as needed
-        navigate('/dashboard'); // Redirect to the dashboard or any other page
-      })
-      .catch((error) => {
-        if (error.response && error.response.data && error.response.data.error) {
-          setError(error.response.data.error);
-        } else {
-          setError('An error occurred. Please try again later.');
-        }
-      });
-  };
+    try {
+      const response = await axios.post('http://localhost:8000/api/login', { email, password });
+
+      console.log(response.data);
+      if (response.data.msg === 'success') {
+        sessionStorage.setItem('isAuthorized', true);
+        navigate('/dashboard');
+      } else {
+        setError('Login failed. Please try again.');
+      }
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error);
+      } else {
+        setError('An error occurred. Please try again later.');
+      }
+    }
+  }
+
 
   return (
-    <div className="container" style={{padding:"150px"}}>
-            <div className="row justify-content-center" style={{ minHeight: '75vh' }}>
-        <div className="col-lg-5" style={{padding:"50px"}}t>
+    <div className="container" style={{ padding: '150px' }}>
+      <div className="row justify-content-center" style={{ minHeight: '75vh' }}>
+        <div className="col-lg-5" style={{ padding: '50px' }}>
           <div className="card p-4 shadow h-100">
             <h3 className="card-title text-center mb-4">Login</h3>
             <form onSubmit={handleSubmit}>
@@ -68,13 +73,14 @@ const Login = () => {
             </p>
           </div>
         </div>
-        <div className="col-lg-7 " style={{padding:"50px"}}>
+        <div className="col-lg-7 " style={{ padding: '50px' }}>
           <div className="card p-4 shadow h-100">
             <img src="logo.png" alt="Logo" className="img-fluid mb-4" />
             <h3 className="card-title text-center mb-4">Mission Statement</h3>
             <p className="text-center">
-              Your mission statement goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam scelerisque velit in dolor ultricies, id eleifend mauris
-              aliquam. Sed varius sapien eu ligula cursus, vitae aliquam leo feugiat. In auctor mauris in lacus lacinia, et condimentum nisl ullamcorper.
+              Your mission statement goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam scelerisque
+              velit in dolor ultricies, id eleifend mauris aliquam. Sed varius sapien eu ligula cursus, vitae aliquam leo
+              feugiat.
             </p>
           </div>
         </div>

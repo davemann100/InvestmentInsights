@@ -1,39 +1,27 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
+const jwt = require("jsonwebtoken");
 
 const saltRounds = 10; // Number of salt rounds for bcrypt hashing
 
 // User Registration
-module.exports.registerUser = async (req, res) => {
-  const { firstName, lastName, username, email, password, confirmPassword } = req.body;
-
-  try {
-    if (password !== confirmPassword) {
-      return res.status(400).json({ error: 'Passwords do not match' });
-    }
-
-    const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-    if (existingUser) {
-      const field = existingUser.username === username ? 'Username' : 'Email';
-      return res.status(400).json({ error: `${field} already exists` });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    const newUser = new User({
-      firstName,
-      lastName,
-      username,
-      email,
-      password: hashedPassword,
-    });
-
-    await newUser.save();
-
-    res.status(201).json({ message: 'User registered successfully' });
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred' });
-  }
+module.exports.registerUser = (req, res) => {
+  User.create(req.body)
+    .then(user => {
+      const userToken = jwt.sign(
+        {
+          id: user._id,
+        },
+        process.env.SECRET_KEY
+      );
+      req.session.userId = user._id; // Fixed: Assign the user ID to req.session.userId
+      res
+        .cookie("usertoken", userToken, {
+          httpOnly: true
+        })
+        .json({ msg: "success", token: userToken }); // Fixed: Removed exclamation mark from the success message
+    })
+    .catch(err => res.json(err));
 };
 // Get All Users
 module.exports.getAllUsers = async (req, res) => {
@@ -47,21 +35,53 @@ module.exports.getAllUsers = async (req, res) => {
 
 // User Login
 module.exports.loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const user = await User.findOne({ email: req.body.email });
+
+  if (user === null) {
+    return res.status(400).json({ error: 'Invalid credentials' });
+  }
 
   try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
+    const correctPassword = await bcrypt.compare(req.body.password, user.password);
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+    if (!correctPassword) {
+      return res.status(400).json({ error: 'Invalid credentials' });
     }
+    req.session.userId = user._id
+    const userToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
 
-    res.status(200).json({ message: 'User authenticated successfully' });
+    res.cookie('usertoken', userToken, { httpOnly: true }).json({ msg: 'success', token: userToken });
   } catch (error) {
     res.status(500).json({ error: 'An error occurred' });
+  }
+};
+
+// Authentication Middleware
+module.exports.logoutUser = (req, res) => {
+  res.clearCookie('usertoken');
+  req.session.destroy()
+  res.sendStatus(200);
+}
+module.exports.checkAuthorization = async (req, res) => {
+  try {
+    const userToken = req.cookies.usertoken;
+
+    if (!userToken) {
+      return res.json({ isAuthorized: false, isRegistered: false });
+    }
+
+    const decodedToken = jwt.verify(userToken, process.env.SECRET_KEY);
+    const user = await User.findById(decodedToken.id);
+
+    if (!user || !user.isRegistered) {
+      return res.json({ isAuthorized: false, isRegistered: false });
+    }
+
+    // Add your authorization logic here
+
+    res.json({ isAuthorized: true, isRegistered: true });
+  } catch (error) {
+    console.error('Authorization check failed:', error);
+    res.json({ isAuthorized: false, isRegistered: false });
   }
 };
