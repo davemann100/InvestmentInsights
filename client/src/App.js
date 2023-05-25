@@ -17,7 +17,15 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    checkAuthorization();
+    const checkAuthAndRegister = async () => {
+      await checkAuthorization();
+      const isRegistered = sessionStorage.getItem('isRegistered');
+      if (isRegistered) {
+        setIsRegistered(true);
+      }
+    };
+  
+    checkAuthAndRegister();
   }, []);
 
   const checkAuthorization = async () => {

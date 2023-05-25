@@ -14,15 +14,26 @@ module.exports.registerUser = (req, res) => {
         },
         process.env.SECRET_KEY
       );
-      req.session.userId = user._id; // Fixed: Assign the user ID to req.session.userId
-      res
-        .cookie("usertoken", userToken, {
-          httpOnly: true
+      
+      // Update the user document to set isRegistered to true
+      User.findByIdAndUpdate(user._id, { isRegistered: true }, { new: true })
+        .then(updatedUser => {
+          req.session.userId = updatedUser._id;
+          req.session.isAuthorized = true; // Set isAuthorized to true
+          req.session.isRegistered = true; // Set isRegistered to true
+          res
+            .cookie("usertoken", userToken, {
+              httpOnly: true
+            })
+            .json({ msg: "success", token: userToken });
         })
-        .json({ msg: "success", token: userToken }); // Fixed: Removed exclamation mark from the success message
+        .catch(error => {
+          console.error('Failed to update user:', error);
+          res.json({ error: 'An error occurred during registration' });
+        });
     })
     .catch(err => res.json(err));
-};
+}
 // Get All Users
 module.exports.getAllUsers = async (req, res) => {
   try {
@@ -85,3 +96,12 @@ module.exports.checkAuthorization = async (req, res) => {
     res.json({ isAuthorized: false, isRegistered: false });
   }
 };
+module.exports.delete = (req, res) => {
+  User.deleteOne({ _id: req.params.id })
+      .then(result => {
+          res.json({ result: result })
+      })
+      .catch((err) => {
+          res.json({ message: 'Something went wrong', error: err })
+      });}
+  

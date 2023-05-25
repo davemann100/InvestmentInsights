@@ -7,5 +7,5 @@ module.exports = app => {
   app.post('/api/logout', UserController.logoutUser);
   app.get('/api/checkAuthorization', UserController.checkAuthorization);
   // app.patch('/api/users/:id', UserController.update);
-  // app.delete('/api/users/:id', UserController.delete);
+  app.delete('/api/users/:id', UserController.delete);
 }
