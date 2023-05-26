@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -75,12 +75,13 @@ const Login = () => {
         </div>
         <div className="col-lg-7 " style={{ padding: '50px' }}>
           <div className="card p-4 shadow h-100">
-            <img src="logo.png" alt="Logo" className="img-fluid mb-4" />
-            <h3 className="card-title text-center mb-4">Mission Statement</h3>
+            <img src="https://www.getyourinsight.com/files/50160/base_logo_white_background_skinny~001.png" alt="Logo" className="img-fluid mb-4" />
+            <h3 className="card-title text-center mb-4">Investment Insights</h3>
             <p className="text-center">
-              Your mission statement goes here. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam scelerisque
-              velit in dolor ultricies, id eleifend mauris aliquam. Sed varius sapien eu ligula cursus, vitae aliquam leo
-              feugiat.
+
+              Mission Statement:
+
+              At Investment Insight, our mission is to empower individuals and organizations with valuable investment insights to make informed financial decisions. We are dedicated to providing comprehensive and reliable information, cutting-edge research, and expert analysis in the field of investments. Our goal is to foster financial literacy, inspire confidence, and help our clients navigate the complexities of the investment landscape. By delivering high-quality insights, we strive to enhance investment knowledge, drive positive outcomes, and contribute to the financial success and well-being of our stakeholders.
             </p>
           </div>
         </div>
