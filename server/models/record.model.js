@@ -37,6 +37,13 @@ const RecordSchema = new mongoose.Schema({
             "Purchase price is required."
         ]
     },
+    sellPrice: {
+        type: Number,
+        required: [
+            true,
+            "Sell price is required."
+        ]
+    },
     stopLoss: {
         type: Number,
         required: [

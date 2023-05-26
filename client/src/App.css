@@ -50,13 +50,13 @@ main {
 }
 
 .link:hover {
-  background: aquamarine;
+  background: rgb(92, 184, 92);
   color: #282c34;
   transition: all 0.5s;
 }
 
 .active {
-  background: aquamarine;
+  background: rgb(92, 184, 92);
   color: #282c34;
 }
 

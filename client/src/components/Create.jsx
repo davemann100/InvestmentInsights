@@ -9,6 +9,7 @@ const Create = (props) => {
   const [ticker, setTicker] = useState("");
   const [numShares, setNumShares] = useState(0);
   const [purchasePrice, setPurchasePrice] = useState(0);
+  const [sellPrice, setSellPrice] = useState(0);
   const [stopLoss, setStopLoss] = useState(0);
 
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const Create = (props) => {
       ticker: ticker,
       numShares: numShares,
       purchasePrice: purchasePrice,
+      sellPrice: sellPrice,
       stopLoss: stopLoss,
     };
     //post to sever
@@ -52,7 +54,7 @@ const Create = (props) => {
       {/* Record Form */}
       <div className="container">
         <div className="card rounded-5 p-2">
-          <div>New Record</div>
+          <div className="text-center">New Record</div>
           <form onSubmit={formHandler} className="w-75 mx-auto">
             <div className="form-group d-flex justify-content-between">
               <div className="d-flex">
@@ -129,6 +131,20 @@ const Create = (props) => {
                   value={stopLoss}
                   onChange={(e) => {
                     setStopLoss(e.target.value);
+                  }}
+                />
+              </div>
+            </div>
+            <div className="form-group d-flex justify-content-between">
+              <div className="d-flex">
+                <label htmlFor="sellPrice">Sell Price</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  name="sellPrice"
+                  value={sellPrice}
+                  onChange={(e) => {
+                    setSellPrice(e.target.value);
                   }}
                 />
               </div>

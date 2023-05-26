@@ -22,3 +22,14 @@ module.exports.createNewRecord = (req, res) => {
             // errorObj => response.status(400).json(errorObj)
         });
 }
+
+// Delete One
+module.exports.delete = (req, res) => {
+    Record.deleteOne({ _id: req.params.id })
+        .then(result => {
+            res.json({ result: result })
+        })
+        .catch((err) => {
+            res.json({ message: 'Something went wrong', error: err })
+        });
+}

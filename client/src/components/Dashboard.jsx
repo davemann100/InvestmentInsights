@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import stockchart from "../stockchart.png";
 
 const Dashboard = (props) => {
   //state variable holding all records
@@ -28,22 +29,21 @@ const Dashboard = (props) => {
 
   return (
     <div>
-      <p className="text-warning">Dashboard.jsx</p>
-      <h1>Welcome Back !</h1>
+      <h1 className="text-light">Welcome Back!</h1>
       {/* Scrolling tickers */}
       <marquee>
         <div>
-          <p className="bg-danger text-dark w-50 text-center border border-success">
-            TSLA=$172.32 META=$172.32 NVDA=$172.32
+          <p className="bg-danger text-dark w-100 text-center border border-success">
+            SPY $418.61 | META $256.32 | NVDA=$384.16
           </p>
         </div>
       </marquee>
 
       {/* L/R cols for chart and quick search */}
-      <div className="container d-flex justify-content-around">
-        <div className="left">
-          <p>$.Chart Here.$</p>
-          <p>-need todo research-</p>
+      <div className="container d-flex">
+        <div className="left w-50">
+          <p className="text-danger">Live Chart</p>
+          <img src={stockchart} className="w-75" />
         </div>
         <div className="right">
           <form onSubmit={searchHandler}>
@@ -85,8 +85,8 @@ const Dashboard = (props) => {
       <hr></hr>
       {/* Records table */}
       <div className="container">
-        <div className="w-25 d-flex justify-content-between">
-          <h4>Trade Tracker</h4>
+        <div className="w-25">
+          <h4 className="text-light">Trade Tracker</h4>
           <Link to={"/create"}>
             <button className="bg-success rounded-4 p-2">Insert</button>
           </Link>
@@ -99,10 +99,11 @@ const Dashboard = (props) => {
               <th scope="col">Stock</th>
               <th scope="col"># Shares</th>
               <th scope="col">Purchase Price</th>
+              <th scope="col">Sell Price</th>
               <th scope="col">Total Cost</th>
               <th scope="col">Stop Loss</th>
               <th scope="col">Max Risk</th>
-              <th scope="col">Current Price</th>
+              {/* <th scope="col">Current Price</th> */}
               <th scope="col">P/L</th>
               <th scope="col">ROI</th>
             </tr>
@@ -115,20 +116,34 @@ const Dashboard = (props) => {
                   <td>{records.b_s}</td>
                   <td>{records.ticker}</td>
                   <td>{records.numShares}</td>
-                  <td>{records.purchasePrice}</td>
-                  <td>-autofill-</td>
-                  <td>{records.stopLoss}</td>
-                  <td>-autofill-</td>
-                  <td>-autofill-</td>
-                  <td>-autofill-</td>
-                  <td>-autofill-</td>
+                  <td>${records.purchasePrice}</td>
+                  <td>${records.sellPrice}</td>
+                  <td>${records.purchasePrice * records.numShares}</td>
+                  <td>${records.stopLoss}</td>
+                  <td>
+                    $
+                    {(records.purchasePrice - records.stopLoss) *
+                      records.numShares}
+                  </td>
+                  {/* <td>-autofill-</td> */}
+                  <td className="text-success">
+                    $
+                    {(records.sellPrice - records.purchasePrice) *
+                      records.numShares}
+                  </td>
+                  <td>
+                    {Math.floor(
+                      (records.sellPrice - records.purchasePrice) *
+                        records.numShares
+                    ) / records.totalCost}
+                  </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
-      {JSON.stringify(records)}
+      {/* {JSON.stringify(records)} */}
     </div>
   );
 };
