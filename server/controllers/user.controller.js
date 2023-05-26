@@ -90,12 +90,13 @@ module.exports.checkAuthorization = async (req, res) => {
 
     // Add your authorization logic here
 
-    res.json({ isAuthorized: true, isRegistered: true });
+    res.json({ isAuthorized: true, isRegistered: true, user });
   } catch (error) {
     console.error('Authorization check failed:', error);
     res.json({ isAuthorized: false, isRegistered: false });
   }
 };
+
 module.exports.delete = (req, res) => {
   User.deleteOne({ _id: req.params.id })
       .then(result => {
@@ -104,4 +105,20 @@ module.exports.delete = (req, res) => {
       .catch((err) => {
           res.json({ message: 'Something went wrong', error: err })
       });}
-  
+module.exports.update = (req, res) => {
+    User.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true, runValidators: true })
+        .then(updatedAuthor => {
+            res.status(200).json(updatedAuthor)
+        })
+        .catch((err) => {
+            res.status(400).json(err);
+        });}
+module.exports.readOne = (req, res) => {
+    Pirate.findOne({ _id: req.params.id })
+        .then(oneSinglePirate => {
+            res.json(oneSinglePirate)
+        })
+        .catch((err) => {
+                  res.json({ message: 'Something went wrong', error: err })
+              });
+      }
