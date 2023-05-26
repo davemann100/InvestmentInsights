@@ -16,8 +16,8 @@ const Sidebar = ({ handleLogout, children }) => {
   const toggle = () => setIsOpen(!isOpen);
 
   const logout = () => {
-    handleLogout()
-  }
+    handleLogout();
+  };
   //   axios
   //     .post("http://localhost:8000/api/logout") // Assuming the logout endpoint is '/api/logout'
   //     .then(() => {
@@ -58,7 +58,7 @@ const Sidebar = ({ handleLogout, children }) => {
       <div style={{ width: isOpen ? "300px" : "50px" }} className="sidebar">
         <div className="top_section">
           <h1 style={{ display: isOpen ? "block" : "none" }} className="logo">
-            Invest Insight
+            Investment Insights
           </h1>
           <div style={{ marginLeft: isOpen ? "50px" : "0px" }} className="bars">
             <BiAlignMiddle onClick={toggle} />

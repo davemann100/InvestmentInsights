@@ -4,8 +4,12 @@ import axios from "axios";
 import stockchart from "../stockchart.png";
 
 const Dashboard = (props) => {
-  //state variable holding all records
+  // state variable holding all records
   const [records, setRecords] = useState([]);
+  // state var holding search input
+  const [search, setSearch] = useState("");
+  // state var holding api response
+  const [apiResponse, setApiResponse] = useState({});
 
   // set state with api request on page load
   useEffect(() => {
@@ -21,10 +25,17 @@ const Dashboard = (props) => {
   }, []);
 
   //quick search functionality
-  const searchHandler = (e) => {
+  const searchHandler = async (e) => {
     e.preventDefault();
-    console.log("search click");
-    console.log(process.env.REACT_APP_API_KEY);
+    try {
+      const api1Response = await axios.get(
+        `https://api.twelvedata.com/stocks?symbol=${search}&apikey=${process.env.REACT_APP_API_KEY}&exchange=NYSE`
+      );
+      console.log(api1Response.data);
+      setApiResponse(api1Response.data);
+    } catch (error) {
+      console.error("An error occurred during API calls:", error);
+    }
   };
 
   return (
@@ -34,7 +45,8 @@ const Dashboard = (props) => {
       <marquee>
         <div>
           <p className="bg-danger text-dark w-100 text-center border border-success">
-            SPY $418.61 | META $256.32 | NVDA=$384.16
+            SPY $418.61 | META $256.32 | NVDA=$384.16 | SPY $418.61 | META
+            $256.32 | NVDA=$384.16
           </p>
         </div>
       </marquee>
@@ -47,9 +59,16 @@ const Dashboard = (props) => {
         </div>
         <div className="right">
           <form onSubmit={searchHandler}>
-            <label htmlFor="search">Quick Search</label>
-            <input name="search" placeholder="Ex: AAPL" />
-            <button>Search</button>
+            <label htmlFor="search" className="text-light">
+              Quick Search
+            </label>
+            <input
+              name="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Ex: AAPL"
+            />
+            <button className="bg-success rounded-4 p-2 m-1">Search</button>
           </form>
           <div className="card p-3">
             <h4 className="text-center text-success">Search Results</h4>
@@ -57,7 +76,7 @@ const Dashboard = (props) => {
               <thead>
                 <tr>
                   <th scope="col">Ticker</th>
-                  <th scope="col">-stock name here-</th>
+                  <th scope="col">-name here-</th>
                 </tr>
               </thead>
               <tbody>
@@ -84,64 +103,67 @@ const Dashboard = (props) => {
       </div>
       <hr></hr>
       {/* Records table */}
-      <div className="container">
-        <div className="w-25">
+      <div className="card p-3 col-10">
+        <div className="w-25 d-flex align-items-end">
           <h4 className="text-light">Trade Tracker</h4>
           <Link to={"/create"}>
-            <button className="bg-success rounded-4 p-2">Insert</button>
+            <button className="bg-success rounded-4 p-2 m-1">Insert</button>
           </Link>
         </div>
-        <table className="table table-striped table-bordered table-hover rounded">
-          <thead>
-            <tr>
-              <th scope="col">Date</th>
-              <th scope="col">Buy-Sell</th>
-              <th scope="col">Stock</th>
-              <th scope="col"># Shares</th>
-              <th scope="col">Purchase Price</th>
-              <th scope="col">Sell Price</th>
-              <th scope="col">Total Cost</th>
-              <th scope="col">Stop Loss</th>
-              <th scope="col">Max Risk</th>
-              {/* <th scope="col">Current Price</th> */}
-              <th scope="col">P/L</th>
-              <th scope="col">ROI</th>
-            </tr>
-          </thead>
-          <tbody>
-            {records.map((records) => {
-              return (
-                <tr key={records._id}>
-                  <th scope="row">{records.date}</th>
-                  <td>{records.b_s}</td>
-                  <td>{records.ticker}</td>
-                  <td>{records.numShares}</td>
-                  <td>${records.purchasePrice}</td>
-                  <td>${records.sellPrice}</td>
-                  <td>${records.purchasePrice * records.numShares}</td>
-                  <td>${records.stopLoss}</td>
-                  <td>
-                    $
-                    {(records.purchasePrice - records.stopLoss) *
-                      records.numShares}
-                  </td>
-                  {/* <td>-autofill-</td> */}
-                  <td className="text-success">
-                    $
-                    {(records.sellPrice - records.purchasePrice) *
-                      records.numShares}
-                  </td>
-                  <td>
-                    {Math.floor(
+        <div className="row">
+          <table className="table table-striped table-bordered table-hover rounded">
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Buy-Sell</th>
+                <th scope="col">Stock</th>
+                <th scope="col"># Shares</th>
+                <th scope="col">Purchase Price</th>
+                <th scope="col">Sell Price</th>
+                <th scope="col">Total Cost</th>
+                <th scope="col">Stop Loss</th>
+                <th scope="col">Max Risk</th>
+                {/* <th scope="col">Current Price</th> */}
+                <th scope="col">P/L</th>
+                <th scope="col">ROI</th>
+              </tr>
+            </thead>
+            <tbody>
+              {records.map((records) => {
+                return (
+                  <tr key={records._id}>
+                    <th scope="row">{records.date}</th>
+                    <td>{records.b_s}</td>
+                    <td>{records.ticker}</td>
+                    <td>{records.numShares}</td>
+                    <td>${records.purchasePrice}</td>
+                    <td>${records.sellPrice}</td>
+                    <td>${records.purchasePrice * records.numShares}</td>
+                    <td>${records.stopLoss}</td>
+                    <td>
+                      $
+                      {(records.purchasePrice - records.stopLoss) *
+                        records.numShares}
+                    </td>
+                    {/* <td>-autofill-</td> */}
+                    <td className="text-success">
+                      $
+                      {(records.sellPrice - records.purchasePrice) *
+                        records.numShares}
+                    </td>
+                    <td>
+                      {/* {Math.floor(
                       (records.sellPrice - records.purchasePrice) *
                         records.numShares
-                    ) / records.totalCost}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                    ) / records.totalCost} */}
+                      - %
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
       {/* {JSON.stringify(records)} */}
     </div>
