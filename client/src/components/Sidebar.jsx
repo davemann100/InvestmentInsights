@@ -3,7 +3,6 @@ import {
   BiAddToQueue,
   BiAlignMiddle,
   BiData,
-  BiEdit,
   BiDesktop,
   BiLogOut,
 } from "react-icons/bi";
@@ -32,11 +31,6 @@ const Sidebar = ({ handleLogout, children }) => {
 
   const menuItem = [
     {
-      path: "/edit/:id",
-      name: "Edit Profile",
-      icon: <BiEdit />,
-    },
-    {
       path: "/dashboard",
       name: "Dashboard",
       icon: <BiDesktop />,
@@ -64,7 +58,7 @@ const Sidebar = ({ handleLogout, children }) => {
       <div style={{ width: isOpen ? "300px" : "50px" }} className="sidebar">
         <div className="top_section">
           <h1 style={{ display: isOpen ? "block" : "none" }} className="logo">
-            Logo
+            Invest Insight
           </h1>
           <div style={{ marginLeft: isOpen ? "50px" : "0px" }} className="bars">
             <BiAlignMiddle onClick={toggle} />

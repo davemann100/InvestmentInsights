@@ -29,7 +29,7 @@ const Dashboard = (props) => {
   return (
     <div>
       <p className="text-warning">Dashboard.jsx</p>
-      <h1>Welcome, -FirstNameHere-</h1>
+      <h1>Welcome Back !</h1>
       {/* Scrolling tickers */}
       <marquee>
         <div>
